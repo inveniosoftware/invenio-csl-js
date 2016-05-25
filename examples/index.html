@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Invenio CSL Demo</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="./node_modules/typeahead.js-bootstrap-css/typeaheadjs.css">
+</head>
+<body ng-app="invenioCsl">
+<div class="container">
+<div class="col-md-6">
+<h1>Demo for Invenio CSL Angular module</h1>
+
+<h2>Using regular select with local data</h2>
+<invenio-csl
+ citeproc-error="Citeproc error occured! (You can change this)"
+ styles-error="CSL Styles could not be loaded (...and this)"
+ default-error="Calm down, everything is going to be OK... (this also!)">
+  <invenio-csl-citeproc
+   endpoint="./data/citation.txt"
+   template="../dist/templates/citeproc.html"></invenio-csl-citeproc>
+  <invenio-csl-error
+   template="../dist/templates/error.html"></invenio-csl-error>
+  <invenio-csl-loading
+   template="../dist/templates/loading.html"></invenio-csl-loading>
+  <invenio-csl-select
+   options='{
+     "aids": "AIDS",
+     "apa": "American Psychology Association",
+     "nature": "Nature",
+     "nature-digest": "Nature Digest"
+   }'
+   template="../dist/templates/select.html"></invenio-csl-select>
+</invenio-csl>
+
+<h2>Using regular select with remote data</h2>
+<invenio-csl>
+  <invenio-csl-citeproc
+   endpoint="./data/citation.txt"
+   template="../dist/templates/citeproc.html"></invenio-csl-citeproc>
+  <invenio-csl-error
+   template="../dist/templates/error.html"></invenio-csl-error>
+  <invenio-csl-loading
+   template="../dist/templates/loading.html"></invenio-csl-loading>
+  <invenio-csl-select
+   lazy="true"
+   remote='./data/styles.json'
+   template="../dist/templates/select.html"></invenio-csl-select>
+</invenio-csl>
+<small><i>The data in this one are lazy-loaded (loaded on first focus)</i></small>
+
+<!-- Some styling for the typeahead dropdowns -->
+<style type="text/css">
+span.twitter-typeahead .tt-menu {
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+span.twitter-typeahead .tt-suggestion {
+  white-space: normal;
+}
+
+span.empty-results {
+  padding-left: 10px;
+  margin-bottom: 0px;
+}
+</style>
+
+<h2>Using typeahead.js with local data</h2>
+<invenio-csl>
+  <invenio-csl-citeproc
+   endpoint="./data/citation.txt"
+   template="../dist/templates/citeproc.html"></invenio-csl-citeproc>
+  <invenio-csl-error
+   template="../dist/templates/error.html"></invenio-csl-error>
+  <invenio-csl-loading
+   template="../dist/templates/loading.html"></invenio-csl-loading>
+  <invenio-csl-typeahead
+   placeholder="Start typing a style..."
+   options='{
+     "aids": "AIDS",
+     "apa": "American Psychology Association",
+     "nature": "Nature",
+     "nature-digest": "Nature Digest"
+   }'
+   template="../dist/templates/typeahead.html"></invenio-csl-typeahead>
+</invenio-csl>
+
+<h2>Using typeahead.js with remote data</h2>
+<invenio-csl>
+  <invenio-csl-citeproc
+   endpoint="./data/citation.txt"
+   template="../dist/templates/citeproc.html"></invenio-csl-citeproc>
+  <invenio-csl-error
+   template="../dist/templates/error.html"></invenio-csl-error>
+  <invenio-csl-loading
+   template="../dist/templates/loading.html"></invenio-csl-loading>
+  <invenio-csl-typeahead
+   placeholder="Start typing a citation style..."
+   remote='./data/styles.json'
+   template="../dist/templates/typeahead.html"></invenio-csl-typeahead>
+</invenio-csl>
+
+</div>
+</div>
+
+<script src="./node_modules/jquery/dist/jquery.js"></script>
+<script src="./node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script src="./node_modules/typeahead.js/dist/typeahead.bundle.js"></script>
+<script src="./node_modules/angular/angular.js"></script>
+<script src="../dist/invenio-csl-js.js"></script>
+
+</body>
+</html>

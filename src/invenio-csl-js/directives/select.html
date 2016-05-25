@@ -1,0 +1,6 @@
+<select class="form-control"
+ ng-model="vm.style"
+ ng-change="handleSelect()"
+ ng-options="option.id as option.display for option in options">
+   <option value="">{{ placeholder }}</option>
+ </select>
