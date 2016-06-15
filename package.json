@@ -1,6 +1,6 @@
 {
-  "name": "Invenio-CSL-JS",
-  "version": "0.1.0",
+  "name": "invenio-csl-js",
+  "version": "0.1.2",
   "description": "Invenio CSL client library for building the web UI.",
   "author": {
     "name": "CERN",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/slint/invenio-csl-js"
+    "url": "https://github.com/inveniosoftware/invenio-csl-js"
   },
   "dependencies": {
     "angular": "=1.4.8",
