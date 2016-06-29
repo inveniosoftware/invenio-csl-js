@@ -4,7 +4,7 @@
   "description": "Invenio CSL client library for building the web UI.",
   "author": {
     "name": "CERN",
-    "email": "info@invenio-software.org"
+    "email": "info@inveniosoftware.org"
   },
   "repository": {
     "type": "git",
