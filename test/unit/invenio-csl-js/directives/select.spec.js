@@ -28,6 +28,7 @@ describe('Unit: testing directive invenio-csl-select', function() {
   describe('with local data', function() {
     var $compile;
     var $rootScope;
+    var $templateCache;
     var template;
     var scope;
 
@@ -37,11 +38,13 @@ describe('Unit: testing directive invenio-csl-select', function() {
     // Inject the angular module
     beforeEach(angular.mock.module('invenioCsl'));
 
-    beforeEach(inject(function(_$compile_, _$rootScope_) {
+    beforeEach(inject(function(_$compile_, _$rootScope_, _$templateCache_) {
       // Template compiler
       $compile = _$compile_;
       // The Scope
       $rootScope = _$rootScope_;
+      // Template cache
+      $templateCache = _$templateCache_;
 
       // Specify select directive with local options
       var options = {
@@ -49,10 +52,12 @@ describe('Unit: testing directive invenio-csl-select', function() {
         'nature-digest': 'Nature Digest',
       };
 
+      $templateCache.put('item.html', '[{{key}}] {{value}}')
       template = '<invenio-csl> ' +
                  '  <invenio-csl-select ' +
                  '   options=\'' + JSON.stringify(options) + '\' ' +
-                 '   template="src/invenio-csl-js/directives/select.html">' +
+                 '   template="src/invenio-csl-js/directives/select.html" ' +
+                 '   item-template="item.html">' +
                  '  </invenio-csl-select>' +
                  '</invenio-csl>';
 

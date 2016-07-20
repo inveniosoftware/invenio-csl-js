@@ -1,7 +1,7 @@
 angular.module('invenioCsl.directives')
   .directive('invenioCslSelect', invenioCslSelect);
 
-invenioCslSelect.$inject = ['Styles'];
+invenioCslSelect.$inject = ['$interpolate', '$templateRequest', '$q', 'Styles'];
 
 /**
  * @ngdoc directive
@@ -25,10 +25,11 @@ invenioCslSelect.$inject = ['Styles'];
  *    <invenio-csl-select
  *     lazy="true"
  *     remote="http://localhost:5000/csl/styles"
- *     template="TEMPLATE_PATH">
+ *     template="TEMPLATE_PATH"
+ *     item-template="ITEM_TEMPLATE_PATH">
  *    </invenio-csl-select>
  */
-function invenioCslSelect(Styles) {
+function invenioCslSelect($interpolate, $templateRequest, $q, Styles) {
 
   return {
     restrict: 'AE',
@@ -124,16 +125,38 @@ function invenioCslSelect(Styles) {
      */
     function initSelect(data) {
 
-      scope.options = Object.keys(data).map(function(key) {
-        return {
-          id: key,
-          value: data[key],
-          // We have an issue here, since there are styles that may have very
-          // long names and, thus produce a very wide select/option element.
-          // We truncate the strings in order to fix this.
-          display: '[' + trunc(key, 20) + '] ' + trunc(data[key], 70)
-        };
+      setItemTemplate(attrs.itemTemplate)
+      .then(function(itemTemplate) {
+        scope.options = Object.keys(data).map(function(key) {
+          return {
+            id: key,
+            value: data[key],
+            // We have an issue here, since there are styles that may have very
+            // long names and, thus produce a very wide select/option element.
+            // We truncate the strings in order to fix this.
+            display: itemTemplate({
+              key: trunc(key, 20),
+              value: trunc(data[key], 70)
+            }),
+          };
+        });
       });
+
+      /**
+       * Set a custom item template if defined.
+       * @memberof initSelect
+       * @function setItemTemplate
+       */
+      function setItemTemplate(path) {
+        if (path) {
+          return $templateRequest(path)
+          .then(function(tmpl) {
+            return $interpolate(tmpl);
+          });
+        } else {
+          return $q.when($interpolate('[{{key}}] {{value}}'));
+        }
+      }
 
       /**
        * Truncates a string to a certain length and if so, appends '...'.
