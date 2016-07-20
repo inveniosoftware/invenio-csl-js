@@ -28,6 +28,7 @@ describe('Unit: testing directive invenio-csl-typeahead', function() {
   describe('with local data', function() {
     var $compile;
     var $rootScope;
+    var $templateCache;
     var template;
     var scope;
 
@@ -37,24 +38,29 @@ describe('Unit: testing directive invenio-csl-typeahead', function() {
     // Inject the angular module
     beforeEach(angular.mock.module('invenioCsl'));
 
-    beforeEach(inject(function(_$compile_, _$rootScope_) {
+    beforeEach(inject(function(_$compile_, _$rootScope_, _$templateCache_) {
       // Template compiler
       $compile = _$compile_;
       // The Scope
       $rootScope = _$rootScope_;
+      // Template cache
+      $templateCache = _$templateCache_;
 
       var options = {
         'apa': 'American Psychology Association',
         'nature-digest': 'Nature Digest'
       };
 
+      $templateCache.put('item.html', '<div>[{{id}}] {{value}}</div>');
       template = '<invenio-csl> ' +
                  '  <invenio-csl-typeahead ' +
                  '   placeholder="Select a style..." ' +
                  '   options=\'' + JSON.stringify(options) + '\' ' +
-                 '   template="src/invenio-csl-js/directives/typeahead.html">' +
+                 '   template="src/invenio-csl-js/directives/typeahead.html" ' +
+                 '   item-template="item.html">' +
                  '  </invenio-csl-typeahead>' +
                  '</invenio-csl>';
+
 
       scope = $rootScope;
       template = $compile(template)(scope);
@@ -152,7 +158,7 @@ describe('Unit: testing directive invenio-csl-typeahead', function() {
 
       expect(options.length).to.be.equal(2);
       expect(options.eq(0).text())
-        .to.contain('[allergy] Allergy Reports');
+        .to.contain('Allergy Reports');
     });
 
     it('should filter options on input', function() {

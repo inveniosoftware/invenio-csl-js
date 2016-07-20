@@ -1,7 +1,7 @@
 angular.module('invenioCsl.directives')
   .directive('invenioCslTypeahead', invenioCslTypeahead);
 
-invenioCslTypeahead.$inject = ['Styles'];
+invenioCslTypeahead.$inject = ['$interpolate', '$templateRequest', '$q', 'Styles'];
 
 /**
  * @ngdoc directive
@@ -18,7 +18,8 @@ invenioCslTypeahead.$inject = ['Styles'];
  *       "apa": "American Psychology Association",
  *       "nature-digest": "Nature Digest"
  *     }'
- *     template="TEMPLATE_PATH">
+ *     template="TEMPLATE_PATH"
+ *     item-template="ITEM_TEMPLATE_PATH">
  *    </invenio-csl-typeahead>
  *
  *    If you want to use a remote source for the options:
@@ -30,7 +31,7 @@ invenioCslTypeahead.$inject = ['Styles'];
  *    </invenio-csl-typeahead>
  *
  */
-function invenioCslTypeahead(Styles) {
+function invenioCslTypeahead($interpolate, $templateRequest, $q, Styles) {
 
   return {
     restrict: 'AE',
@@ -127,6 +128,12 @@ function invenioCslTypeahead(Styles) {
      */
     function initTypeahead(data) {
 
+      // Set input settings for typeahead.js
+      var typeaheadSettings = {
+        minLength: 0,
+        highlight: true
+      };
+
       // First we need to initialize the suggestion engine
       var bloodhoundSettings = {
         // In Twitter culture, 'datum' is the singular form of 'data'.
@@ -142,7 +149,6 @@ function invenioCslTypeahead(Styles) {
         return {
           id: key,
           value: data[key],
-          display: '[' + key + '] ' + data[key]
         };
       });
       var engine = new Bloodhound(bloodhoundSettings);
@@ -151,32 +157,47 @@ function invenioCslTypeahead(Styles) {
       var dataset = {
         name: 'csl-styles',
         limit: 100,
-        display: 'display',
+        display: 'value',
         source: function(q, sync) {
           // We do this because of an issue typeahead.js has when the input
           // is an empty string, not showing the suggestions.
           if (q === '') {sync(engine.all()); } else {engine.search(q, sync); }
         },
-        templates: { empty: '<p class="empty-results">No results...</p>' }
+        templates: {
+          empty: '<p class="empty-results">No results...</p>',
+        }
       };
 
-      // Set input settings for typeahead.js
-      var typeaheadSettings = {
-        minLength: 0,
-        highlight: true
-      };
+      setItemTemplate(attrs.itemTemplate)
+      .finally(function() {
+        // Initialize typeahead.js
+        scope.typeahead.typeahead(typeaheadSettings, dataset);
 
-      // Initialize typeahead.js
-      scope.typeahead.typeahead(typeaheadSettings, dataset);
+        // Handle typehead.js events
+        scope.typeahead.on('typeahead:select', scope.handleSelect);
+        scope.typeahead.on('typeahead:active', scope.clearInput);
 
-      // Handle typehead.js events
-      scope.typeahead.on('typeahead:select', handleSelect);
-      scope.typeahead.on('typeahead:active', clearInput);
+        // If we lazy-initialized this, the user has already clicked inside the
+        // uninitialized, so we should trigger the suggestions manually.
+        if (attrs.lazy) {
+          scope.typeahead.focus();
+        }
+      });
 
-      // If we lazy-initialized this, the user has already clicked inside the
-      // uninitialized, so we should trigger the suggestions manually.
-      if (attrs.lazy) {
-        scope.typeahead.focus();
+      /**
+       * Set a custom item template if defined.
+       * @memberof initTypeahead
+       * @function setItemTemplate
+       */
+      function setItemTemplate(path) {
+        if (attrs.itemTemplate) {
+          return $templateRequest(attrs.itemTemplate)
+          .then(function(html) {
+            dataset.templates.suggestion = $interpolate(html);
+          });
+        } else {
+          return $q.when(null);
+        }
       }
     }
 
