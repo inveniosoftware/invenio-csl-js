@@ -63,5 +63,8 @@
     "docs": "jsdoc  -c .jsdoc --pedantic src/",
     "test": "gulp test"
   },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
+  },
   "license": "GPLv2"
 }

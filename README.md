@@ -1,7 +1,7 @@
 Invenio-CSL-JS
 =================
 
-[![Build Status](https://img.shields.io/travis/inveniosoftware/invenio-csl-js.svg)](https://travis-ci.org/inveniosoftware/invenio-csl-js)
+[![Build Status](https://github.com/inveniosoftware/invenio-csl-js/workflows/CI/badge.svg)](https://github.com/inveniosoftware/invenio-csl-js/actions)
 [![Coverage](https://img.shields.io/coveralls/inveniosoftware/invenio-csl-js.svg)](https://coveralls.io/r/inveniosoftware/invenio-csl-js)
 [![Release](https://img.shields.io/github/tag/inveniosoftware/invenio-csl-js.svg)](https://github.com/inveniosoftware/invenio-csl-js/releases)
 [![LICENSE](https://img.shields.io/github/license/inveniosoftware/invenio-csl-js.svg)](https://github.com/inveniosoftware/invenio-csl-js/blob/master/LICENSE)
